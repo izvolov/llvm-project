@@ -17,14 +17,27 @@
 #include "../CartesianBenchmarks.h"
 #include "../GenerateInput.h"
 
-enum class ValueType { Uint32, Uint64, Pair, Tuple, String, Float };
-struct AllValueTypes : EnumValuesAsTuple<AllValueTypes, ValueType, 6> {
+enum class ValueType { Int8, Uin8, Int16, Uint16, Int32, Uint32, Int64, Uint64, Pair, Tuple, String, Float };
+struct AllValueTypes : EnumValuesAsTuple<AllValueTypes, ValueType, 8> {
   static constexpr const char* Names[] = {
-      "uint32", "uint64", "pair<uint32, uint32>", "tuple<uint32, uint64, uint32>", "string", "float"};
+      "int8", "uint8",
+      "int16", "uint16",
+      "int32", "uint32",
+      "int64", "uint64",
+      "pair<uint32, uint32>",
+      "tuple<uint32, uint64, uint32>",
+      "string",
+      "float"};
 };
 
 using Types =
-    std::tuple<uint32_t,
+    std::tuple<int8_t,
+               uint8_t,
+               int16_t,
+               uint16_t,
+               int32_t,
+               uint32_t,
+               int64_t,
                uint64_t,
                std::pair<uint32_t, uint32_t>,
                std::tuple<uint32_t, uint64_t, uint32_t>,
@@ -97,9 +110,19 @@ void fillValues(std::vector<T>& V, size_t N, Order O) {
     V.resize(N, 0);
   } else if (O == Order::QuickSortAdversary) {
     fillAdversarialQuickSortInput(V, N);
+    if constexpr (std::is_signed_v<T>) {
+      for (auto& v : V) {
+        v -= static_cast<T>(N / 2);
+      }
+    }
   } else {
     while (V.size() < N)
       V.push_back(V.size());
+    if constexpr (std::is_signed_v<T>) {
+      for (auto& v : V) {
+        v -= static_cast<T>(N / 2);
+      }
+    }
   }
 }
 
