@@ -259,11 +259,15 @@ const std::vector<size_t> Quantities = {
     1 << 6,
     1 << 8,
     1 << 10,
+    1 << 12,
     1 << 14,
+    1 << 16,
 // Running each benchmark in parallel consumes too much memory with MSAN
 // and can lead to the test process being killed.
 #if !TEST_HAS_FEATURE(memory_sanitizer)
-    1 << 18
+    1 << 18,
+    1 << 19,
+    1 << 20
 #endif
 };
 
